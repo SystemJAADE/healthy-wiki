@@ -1,6 +1,7 @@
 {
   "name": "healthy-wiki",
   "type": "module",
+  "author": "System JAADE",
   "version": "0.0.1",
   "license": "MS-RSL",
   "scripts": {
