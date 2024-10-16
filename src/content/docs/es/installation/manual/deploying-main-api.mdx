@@ -1,0 +1,112 @@
+---
+title: Desplegando la API de Healthy Pacientes (Instalación manual)
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+### Clonando el repositorio
+
+Clonamos el repositorio de la API de Healthy Pacientes desde GitHub:
+
+<Tabs syncKey="pkg">
+<TabItem label="git">
+```sh
+git clone https://github.com/SystemJAADE/healthy-patients-service.git
+```
+</TabItem>
+</Tabs>
+
+Esto creará una carpeta llamada `healthy-patients-service` en tu directorio actual.
+
+### Creando una base de datos
+
+Necesitaremos crear una base de datos, crear un usuario y darle al usuario todos los permisos
+hacia la base de datos. Luego también tendremos que configurar la aplicación para que use esta base de datos.
+```sql
+-- Necesitaras cambiar estos valores por los que deseas usar
+-- DB_NAME
+-- DB_USER
+-- DB_PASS
+
+-- Creando la base de datos para healthy
+CREATE DATABASE DB_NAME;
+
+-- Creando un usuario para que use la base de datos
+CREATE USER 'DB_USER'@'localhost' IDENTIFIED BY 'DB_PASS';
+
+-- Darle al usuario acceso total para acceder a todas las tablas de healthy
+GRANT ALL PRIVILEGES ON DB_NAME.* TO 'DB_USER'@'localhost';
+
+-- Cerciorarnos de que los cambios de privilegios se hayan aplicado inmediatamente
+FLUSH PRIVILEGES;
+
+-- Salir del shell de mysql
+quit
+```
+
+Ahora necesitaremos crear una base de datos temporal (Shadow database) que necesita prisma ya que se usa para
+detectar problemas en el schema entre otras cosas. La shadow database solo es necesaria en desarrollo,
+ya que en producción no se usa. Para más información entra a este enlace. Esta base de datos tiene que ser creada
+desde el usuario root y no desde el usuario que creamos anteriormente.
+```sql
+CREATE DATABASE IF NOT EXISTS shadow_db;
+```
+
+### Instalando las dependencias de la API
+Para instalar las dependencias solo necesitamos correr el siguiente comando:
+```sh
+yarn install
+```
+
+### Sincronizando los cambios del schema con la base de datos
+Cada vez que se modifique el archivo `schema.prisma` es necesario sincronizar los cambios con la base de datos.
+Para esto usaremos el comando `npx prisma migrate dev` y luego le pondremos de nombre lo que deseemos.
+Estos cambios no se commitean, ya que cada desarrollador puede tener cambios distintos en su base de datos.
+Cuando la base de datos esté finalizada y lista para ser usada en producción, recién se commiteara el archivo
+generado para poder hacer uso del sistema de migraciones de prisma.
+
+:::tip
+En MacOS para que funcione correctamente será necesario eliminar la siguiente linea del archivo `schema.prisma`:
+
+```prisma
+binaryTargets = ["windows", "debian-openssl-1.0.x", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+```
+:::
+
+### Configurando las variables de entorno
+Copiamos el .env de ejemplo
+```sh
+cp .env.example .env
+```
+
+Y lo modificamos a nuestras necesidades
+<Tabs syncKey="pkg">
+<TabItem label="nano">
+```sh
+nano .env
+```
+</TabItem>
+
+<TabItem label="vim">
+```sh
+vim .env
+```
+</TabItem>
+
+<TabItem label="Windows">
+```sh
+notepad .env
+```
+</TabItem>
+</Tabs>
+
+### Finalizando la instalación
+
+Si todo salió bien, deberías ser capaz de iniciar healthy-patients-service:
+```sh
+yarn run-dev
+```
+
+Y listo, la API de Healthy Pacientes estará desplegada en tu sistema.
+
+Puedes verificar que la aplicación está ejecutándose correctamente ingresando desde su navegador en la dirección: `http://APP_HOST:APP_PORT`

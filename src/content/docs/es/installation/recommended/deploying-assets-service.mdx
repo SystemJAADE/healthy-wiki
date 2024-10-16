@@ -1,0 +1,57 @@
+---
+title: Desplegando el Servicio de Assets de Healthy (Instalación recomendada)
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+### Clonando el repositorio
+
+Clonamos el repositorio de la API de Healthy Pacientes desde GitHub:
+
+<Tabs syncKey="pkg">
+<TabItem label="git">
+```sh
+git clone https://github.com/SystemJAADE/healthy-assets-service.git
+```
+</TabItem>
+</Tabs>
+
+Esto creará una carpeta llamada `healthy-assets-service` en tu directorio actual.
+
+### Configurando las variables de entorno
+Copiamos el .env de ejemplo
+```sh
+cp .env.example .env
+```
+
+Y lo modificamos a nuestras necesidades
+<Tabs syncKey="pkg">
+<TabItem label="nano">
+```sh
+nano .env
+```
+</TabItem>
+
+<TabItem label="vim">
+```sh
+vim .env
+```
+</TabItem>
+</Tabs>
+
+### Orquestando los contenedores
+
+Luego usaremos Docker Compose para orquestar los contenedores de la API.
+Para ello iniciaremos los contenedores en modo background con el siguiente comando:
+```sh
+make docker-dev-run
+```
+
+Y listo, el servicio de Assets de Healthy estará desplegado en tu sistema.
+
+### Apagando los contenedores
+
+En caso de que quieras apagar los contenedores, puedes hacerlo con el siguiente comando:
+```sh
+make docker-dev-stop
+```

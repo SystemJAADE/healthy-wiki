@@ -1,0 +1,74 @@
+---
+title: Desplegando el Servicio de Assets de Healthy (Instalación manual)
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+### Clonando el repositorio
+
+Clonamos el repositorio del Servicio de Assets de Healthy desde GitHub:
+
+<Tabs syncKey="pkg">
+<TabItem label="git">
+```sh
+git clone https://github.com/SystemJAADE/healthy-assets-service.git
+```
+</TabItem>
+</Tabs>
+
+Esto creará una carpeta llamada `healthy-assets-service` en tu directorio actual.
+
+### Configurando MinIO
+
+Para poder usar el servicio de Assets de Healthy, necesitamos tener un servidor de MinIO corriendo en nuestra máquina.
+Debemos crear un bucket llamado `avatars` en el panel de administración de MinIO o usando la CLI.
+En esta guia usaremos la CLI de MinIO para crear el bucket.
+
+Primero necesitamos agregar el servidor de MinIO.
+Donde `SERVER` es la IP o dominio de tu servidor MinIO y `PASSWORD` es la contraseña que estableciste cuando instalaste MinIO.
+```sh
+mc alias set myminio http://SERVER:9000 admin PASSWORD
+```
+
+Luego creamos el bucket `avatars`
+```sh
+mc mb myminio/avatars
+```
+
+Y listo, ya tenemos nuestro servidor de MinIO configurado.
+
+### Configurando las variables de entorno
+Copiamos el .env de ejemplo
+```sh
+cp .env.example .env
+```
+
+Y lo modificamos a nuestras necesidades
+<Tabs syncKey="pkg">
+<TabItem label="nano">
+```sh
+nano .env
+```
+</TabItem>
+
+<TabItem label="vim">
+```sh
+vim .env
+```
+</TabItem>
+
+<TabItem label="Windows">
+```sh
+notepad .env
+```
+</TabItem>
+</Tabs>
+
+### Finalizando la instalación
+
+Si todo salió bien, deberías ser capaz de iniciar healthy-assets-service:
+```sh
+yarn run-dev
+```
+
+Y listo, el servicio de Assets de Healthy estará desplegado en tu sistema.

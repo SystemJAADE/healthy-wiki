@@ -1,0 +1,57 @@
+---
+title: Deploying the Healthy Assets Service (Recommended Installation)
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+### Cloning the repository
+
+Clone the Healthy Patients API repository from GitHub:
+
+<Tabs syncKey="pkg">
+<TabItem label="git">
+```sh
+git clone https://github.com/SystemJAADE/healthy-assets-service.git
+```
+</TabItem>
+</Tabs>
+
+This will create a folder named 'healthy-assets-service' in your current directory.
+
+### Setting up environment variables
+Copy the example .env file
+```sh
+cp .env.example .env
+```
+
+And modify it according to your needs
+<Tabs syncKey="pkg">
+<TabItem label="nano">
+```sh
+nano .env
+```
+</TabItem>
+
+<TabItem label="vim">
+```sh
+vim .env
+```
+</TabItem>
+</Tabs>
+
+### Orchestrating the containers
+
+Then, we will use Docker Compose to orchestrate the API containers.
+Start the containers in background mode with the following command:
+```sh
+make docker-dev-run
+```
+
+And that's it, the Healthy Assets Service will be deployed on your system.
+
+### Stopping the containers
+
+If you want to stop the containers, you can do so with the following command:
+```sh
+make docker-dev-stop
+```

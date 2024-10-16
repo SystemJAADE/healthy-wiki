@@ -1,0 +1,112 @@
+---
+title: Deploying the Healthy Patients API (Manual Installation)
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+### Cloning the repository
+
+We clone the Healthy Patients API repository from GitHub:
+
+<Tabs syncKey="pkg">
+<TabItem label="git">
+```sh
+git clone https://github.com/SystemJAADE/healthy-patients-service.git
+```
+</TabItem>
+</Tabs>
+
+This will create a folder called ``healthy-patients-service`` in your current directory.
+
+### Creating a database
+
+We will need to create a database, create a user and give the user all the permissions
+to the database. Then we will also need to configure the application to use this database.
+```sql
+-- You will need to change these values to the ones you want to use
+-- DB_NAME
+-- DB_USER
+-- DB_PASS
+
+-- Creating the database for healthy
+CREATE DATABASE DB_NAME;
+
+-- Creating a user to use the database
+CREATE USER 'DB_USER'@'localhost' IDENTIFIED BY 'DB_PASS';
+
+-- Giving the user full access to access all the healthy tables
+GRANT ALL PRIVILEGES ON DB_NAME.* TO 'DB_USER'@'localhost';
+
+-- Make sure that the privilege changes have been applied immediately
+FLUSH PRIVILEGES;
+
+-- Exit the mysql shell
+quit
+```
+
+Now we will need to create a temporary database (Shadow database) that needs prism as it is used to detect problems in the schema among other things.
+detect problems in the schema among other things. The shadow database is only needed in development,
+since it is not used in production. For more information go to this link. This database has to be created
+from the root user and not from the user we created before.
+```sql
+CREATE DATABASE IF NOT EXISTS shadow_db;
+```
+
+### Installing the API dependencies
+To install the dependencies we just need to run the following command:
+```sh
+yarn install
+```
+
+### Synchronizing schema changes with the database
+Every time the `schema.prisma` file is modified it is necessary to synchronize the changes with the database.
+For this we will use the command `npx prisma migrate dev` and then we will name it whatever we want.
+These changes will not be committed, since each developer may have different changes in its database.
+When the database is finalized and ready to be used in production, the generated file will be commented in order to be able to make use of the system.
+generated file will be commented in order to make use of the prism migration system.
+
+:::tip
+On MacOS to work correctly it will be necessary to delete the following line from the `schema.prisma` file:
+
+```prisma
+binaryTargets = ["windows", "debian-openssl-1.0.x", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+```
+:::
+
+### Configuring Environment Variables
+Copy the example `.env` file:
+```sh
+cp .env.example .env
+```
+
+And modify it according to your needs:
+<Tabs syncKey="pkg">
+<TabItem label="nano">
+```sh
+nano .env
+```
+</TabItem>
+
+<TabItem label="vim">
+```sh
+vim .env
+```
+</TabItem>
+
+<TabItem label="Windows">
+```sh
+notepad .env
+```
+</TabItem>
+</Tabs>
+
+### Finalizing Installation
+
+If everything went well, you should be able to start `healthy-patients-service`:
+```sh
+yarn run-dev
+```
+
+And that's it. The Healthy Patients API will be deployed on your system.
+
+You can verify that the application is running correctly by entering the following address in your browser: `http://APP_HOST:APP_PORT`
