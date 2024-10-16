@@ -7,6 +7,8 @@ export const locales = {
 };
 
 export default defineConfig({
+	site: 'https://systemjaade.github.io',
+	base: '/healthy-wiki',
 	integrations: [
 		starlight({
 			title: 'Healthy',
