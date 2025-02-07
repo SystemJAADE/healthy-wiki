@@ -9,13 +9,19 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "docker:build": "docker compose -f docker-compose.yml build",
+    "docker:run": "docker compose -f docker-compose.yml up app",
+    "docker:run-bg": "docker compose -f docker-compose.yml up -d app",
+    "docker:stop": "docker compose -f docker-compose.yml down",
+    "docker:logs": "docker compose -f docker-compose.yml logs"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.3",
+    "@astrojs/node": "^9.0.2",
     "@astrojs/starlight": "^0.26.3",
     "astro": "^4.16.1",
     "sharp": "^0.32.5",
-    "@astrojs/check": "^0.9.3",
     "typescript": "^5.5.4"
   }
 }

@@ -1,0 +1,18 @@
+services:
+  app:
+    platform: linux/amd64
+    build:
+      dockerfile: Dockerfile
+      context: .
+    command: ["node", "/app/dist/server/entry.mjs"]
+    environment:
+      APP_HOST: ${APP_HOST}
+      APP_PORT: ${APP_PORT}
+    volumes:
+      - /app/node_modules
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+
+networks:
+  default:
+    name: healthy-wiki-network
